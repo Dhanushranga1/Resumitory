@@ -1,4 +1,8 @@
 from pydantic_settings import BaseSettings
+from pathlib import Path
+
+# Get the base directory (resumitory-backend/)
+BASE_DIR = Path(__file__).resolve().parent.parent
 
 
 class Settings(BaseSettings):
@@ -13,7 +17,7 @@ class Settings(BaseSettings):
     API_PORT: int = 8000
     
     class Config:
-        env_file = ".env"
+        env_file = str(BASE_DIR / ".env")
         case_sensitive = True
 
 

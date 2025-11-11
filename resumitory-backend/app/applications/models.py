@@ -20,9 +20,9 @@ class ApplicationBase(SQLModel):
     role: str = Field(..., description="Job role/title")
     date_applied: date = Field(..., description="Date when application was submitted")
     status: StatusEnum = Field(default=StatusEnum.applied, description="Current application status")
-    notes: Optional[str] = Field(None, description="Optional notes about the application")
-    resume_id: Optional[UUID] = Field(None, foreign_key="resumes.id", description="Linked resume ID")
-    follow_up_date: Optional[date] = Field(None, description="Date to follow up on application")
+    notes: Optional[str] = Field(default=None, description="Optional notes about the application")
+    resume_id: Optional[UUID] = Field(default=None, foreign_key="resumes.id", description="Linked resume ID")
+    follow_up_date: Optional[date] = Field(default=None, description="Date to follow up on application")
 
 
 class Application(ApplicationBase, table=True):
