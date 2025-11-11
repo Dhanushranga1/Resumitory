@@ -7,6 +7,7 @@ class Settings(BaseSettings):
     SUPABASE_URL: str
     SUPABASE_KEY: str
     SUPABASE_JWT_SECRET: str
+    DATABASE_PASSWORD: str
     
     API_HOST: str = "0.0.0.0"
     API_PORT: int = 8000
