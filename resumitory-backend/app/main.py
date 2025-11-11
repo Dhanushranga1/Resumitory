@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.auth.router import router as auth_router
 from app.resumes.router import router as resumes_router
+from app.applications.router import router as applications_router
 
 app = FastAPI(
     title="Resumitory API",
@@ -24,7 +25,7 @@ app.add_middleware(
 # Include routers
 app.include_router(auth_router, prefix="/auth", tags=["Authentication"])
 app.include_router(resumes_router, prefix="/resumes", tags=["Resumes"])
-# TODO: Add application router
+app.include_router(applications_router, prefix="/applications", tags=["Applications"])
 # TODO: Add rounds router (V1.1)
 
 

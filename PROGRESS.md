@@ -2,7 +2,7 @@
 
 Last Updated: November 12, 2025
 
-## 🎯 Overall Progress: 35% Complete
+## 🎯 Overall Progress: 45% Complete
 
 ---
 
@@ -49,6 +49,28 @@ Last Updated: November 12, 2025
 
 **Commit:** `feat: Add Resume CRUD with file upload to Supabase Storage` (e70c2d3)
 
+#### Day 5-6: Application Module ✅
+- [x] Create `app/applications/models.py` with Application SQLModel
+- [x] Add StatusEnum (applied, interview, offer, rejected, archived)
+- [x] Add ApplicationCreate, ApplicationUpdate, ApplicationResponse schemas
+- [x] Add ApplicationWithResume schema (includes resume_name)
+- [x] Add resume_id foreign key to resumes table
+- [x] Create `app/applications/router.py` with full CRUD
+- [x] Implement POST `/applications/` (create with resume linking)
+- [x] Implement POST `/applications/quick` (quick add with defaults)
+- [x] Implement GET `/applications/` (list with resume names)
+- [x] Add status filter support
+- [x] Add search functionality (company/role, case-insensitive)
+- [x] Add resume_id filter support
+- [x] Implement GET `/applications/{id}` (get with resume name)
+- [x] Implement PATCH `/applications/{id}` (update any field)
+- [x] Implement DELETE `/applications/{id}` (delete application)
+- [x] Implement GET `/applications/stats/summary` (stats + follow-ups)
+- [x] Register applications router in main.py
+- [x] Update TESTING.md with Application tests
+
+**Status:** ✅ Complete (Ready for testing)
+
 ---
 
 ## 🚧 In Progress
@@ -56,7 +78,7 @@ Last Updated: November 12, 2025
 ### Documentation
 - [x] Main README.md
 - [x] Backend README.md
-- [x] Backend TESTING.md
+- [x] Backend TESTING.md (updated with Applications)
 - [x] ACTION_PLAN.md
 - [x] CONTRIBUTING.md
 - [x] LICENSE
@@ -71,23 +93,24 @@ Last Updated: November 12, 2025
 
 ### Immediate (This Week)
 
-#### Day 5: Application Models
-- [ ] Create `app/applications/models.py` with Application SQLModel
-- [ ] Add StatusEnum (applied, interview, offer, rejected, archived)
-- [ ] Add ApplicationCreate, ApplicationUpdate, ApplicationResponse schemas
-- [ ] Add resume_id foreign key to resumes table
+#### Day 7: Backend Testing & Documentation
+- [ ] Test all Application endpoints via Swagger UI
+- [ ] Verify resume-to-application linking works
+- [ ] Test search and filter combinations
+- [ ] Test stats endpoint
+- [ ] Update Backend README with all endpoints
+- [ ] Create commit: "feat: Add Application CRUD with search and resume linking"
 
-#### Day 6-7: Application CRUD Endpoints
-- [ ] Create `app/applications/router.py`
-- [ ] Implement POST `/applications/` (create)
-- [ ] Implement GET `/applications/` (list with filters)
-- [ ] Implement GET `/applications/{id}` (get specific)
-- [ ] Implement PATCH `/applications/{id}` (update)
-- [ ] Implement DELETE `/applications/{id}` (delete)
-- [ ] Add search functionality (company/role)
-- [ ] Add status filter
-- [ ] Implement POST `/applications/quick` (quick add)
-- [ ] Test all endpoints
+#### Day 8-10: Frontend Setup
+- [ ] Initialize React + TypeScript + Vite project
+- [ ] Set up Tailwind CSS
+- [ ] Install shadcn/ui components
+- [ ] Configure React Query
+- [ ] Set up Zustand for state
+- [ ] Create Supabase client
+- [ ] Create Axios instance with JWT interceptor
+- [ ] Build auth pages (Login, Signup)
+- [ ] Create Dashboard layout
 
 ---
 
@@ -98,6 +121,8 @@ Last Updated: November 12, 2025
 | Module | Progress | Status |
 |--------|----------|--------|
 | **Auth** | 100% | ✅ Complete |
+| **Resumes** | 100% | ✅ Complete (7 endpoints) |
+| **Applications** | 100% | ✅ Complete (8 endpoints) |
 | **Config** | 100% | ✅ Complete |
 | **Database** | 100% | ✅ Complete |
 | **Resumes** | 100% | ✅ Complete |

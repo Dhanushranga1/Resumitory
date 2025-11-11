@@ -198,6 +198,292 @@ API docs at: **http://localhost:8000/docs**
 ### Issue: "Database connection error"
 **Solution:**
 - Verify `.env` credentials are correct
+- Check database URL format
+- Test connection in Supabase dashboard
+
+---
+
+## Testing Application Endpoints
+
+### Test 7: Create Application
+
+**Endpoint:** `POST /applications/`
+
+**Request Body:**
+```json
+{
+  "company": "TechCorp Inc",
+  "role": "Senior Backend Engineer",
+  "date_applied": "2025-01-15",
+  "status": "applied",
+  "notes": "Applied via LinkedIn, referral from John",
+  "resume_id": "your-resume-uuid-here",
+  "follow_up_date": "2025-01-22"
+}
+```
+
+**Expected Response (201 Created):**
+```json
+{
+  "id": "application-uuid",
+  "user_id": "your-user-id",
+  "company": "TechCorp Inc",
+  "role": "Senior Backend Engineer",
+  "date_applied": "2025-01-15",
+  "status": "applied",
+  "notes": "Applied via LinkedIn, referral from John",
+  "resume_id": "your-resume-uuid-here",
+  "follow_up_date": "2025-01-22",
+  "created_at": "2025-11-12T...",
+  "last_updated": "2025-11-12T..."
+}
+```
+
+### Test 8: Quick Add Application
+
+**Endpoint:** `POST /applications/quick`
+
+**Query Parameters:**
+- company: "StartupXYZ"
+- role: "Backend Developer"
+- resume_id: "your-resume-uuid" (optional)
+
+**Expected Response (201 Created):**
+- Application with `date_applied` = today
+- `status` automatically set to "applied"
+- Minimal fields filled
+
+### Test 9: List Applications (All)
+
+**Endpoint:** `GET /applications/`
+
+**Expected Response (200 OK):**
+```json
+[
+  {
+    "id": "uuid",
+    "company": "TechCorp Inc",
+    "role": "Senior Backend Engineer",
+    "date_applied": "2025-01-15",
+    "status": "applied",
+    "resume_id": "uuid",
+    "resume_name": "Software Engineer Resume v1",
+    ...
+  }
+]
+```
+
+### Test 10: Filter by Status
+
+**Endpoint:** `GET /applications/?status_filter=interview`
+
+**Expected Response (200 OK):**
+- Only applications with status = "interview"
+
+### Test 11: Search Applications
+
+**Endpoint:** `GET /applications/?search=TechCorp`
+
+**Expected Response (200 OK):**
+- Applications matching "TechCorp" in company OR role
+- Case-insensitive search
+
+### Test 12: Filter by Resume
+
+**Endpoint:** `GET /applications/?resume_id=your-resume-uuid`
+
+**Expected Response (200 OK):**
+- All applications using that specific resume
+
+### Test 13: Get Application Details
+
+**Endpoint:** `GET /applications/{application_id}`
+
+**Expected Response (200 OK):**
+```json
+{
+  "id": "uuid",
+  "company": "TechCorp Inc",
+  "role": "Senior Backend Engineer",
+  "resume_id": "uuid",
+  "resume_name": "Software Engineer Resume v1",
+  ...
+}
+```
+
+### Test 14: Update Application Status
+
+**Endpoint:** `PATCH /applications/{application_id}`
+
+**Request Body:**
+```json
+{
+  "status": "interview",
+  "notes": "Phone screen scheduled for Jan 18"
+}
+```
+
+**Expected Response (200 OK):**
+- Updated application
+- `last_updated` timestamp changed
+
+### Test 15: Get Application Stats
+
+**Endpoint:** `GET /applications/stats/summary`
+
+**Expected Response (200 OK):**
+```json
+{
+  "total_applications": 5,
+  "by_status": {
+    "applied": 2,
+    "interview": 2,
+    "offer": 1,
+    "rejected": 0,
+    "archived": 0
+  },
+  "upcoming_followups": [
+    {
+      "id": "uuid",
+      "company": "TechCorp Inc",
+      "role": "Senior Backend Engineer",
+      "follow_up_date": "2025-01-22"
+    }
+  ]
+}
+```
+
+### Test 16: Delete Application
+
+**Endpoint:** `DELETE /applications/{application_id}`
+
+**Expected Response (204 No Content):**
+- Application deleted
+- Resume NOT deleted (only link removed)
+
+---
+
+## Integration Test Scenarios
+
+### Scenario 1: Full Application Flow
+1. Create resume → Get `resume_id`
+2. Create application with `resume_id` → Verify resume name appears
+3. Update application status → Check `last_updated` changes
+4. List applications → Verify resume name included
+5. Delete application → Verify resume still exists
+
+### Scenario 2: Bulk Apply Session
+1. Upload 2-3 resumes
+2. Use `/applications/quick` to add 10 applications rapidly
+3. List applications → Verify all added with today's date
+4. Filter by status="applied" → Should show all 10
+
+### Scenario 3: Search & Filter
+1. Create applications for "Google", "Microsoft", "Amazon"
+2. Search "Google" → Only Google results
+3. Filter by status="interview" → Only interview applications
+4. Combine: `?search=Google&status_filter=interview`
+
+---
+
+## Testing Checklist
+
+### Authentication ✅
+- [ ] Get JWT token from Supabase
+- [ ] Test `/auth/me` endpoint
+- [ ] Verify 401 without token
+
+### Resumes ✅
+- [ ] Upload PDF resume
+- [ ] Upload PDF + .tex resume
+- [ ] List all resumes
+- [ ] Get specific resume
+- [ ] Update resume metadata
+- [ ] Clone resume
+- [ ] Delete resume
+- [ ] Verify file deletion in Supabase Storage
+
+### Applications ✅
+- [ ] Create full application
+- [ ] Quick add application
+- [ ] List all applications (with resume names)
+- [ ] Filter by status
+- [ ] Search by company/role
+- [ ] Filter by resume_id
+- [ ] Get application details
+- [ ] Update application fields
+- [ ] Get stats summary
+- [ ] Delete application
+
+### Edge Cases ✅
+- [ ] Create application without resume_id (allowed)
+- [ ] Create application with invalid resume_id (should fail)
+- [ ] Update to invalid status (should fail)
+- [ ] Access another user's application (should fail)
+- [ ] Search with no results
+- [ ] Follow-up date in past (allowed)
+
+---
+
+## Performance Testing (Optional)
+
+### Load Test with `locust`
+```bash
+pip install locust
+
+# Create locustfile.py with API tests
+locust -f locustfile.py --host=http://localhost:8000
+```
+
+### Expected Metrics (Local)
+- Resume upload: < 2s (5MB PDF)
+- List resumes: < 100ms (100 resumes)
+- Create application: < 50ms
+- Search applications: < 100ms (1000 applications)
+
+---
+
+## Next Steps
+
+After testing backend endpoints:
+1. ✅ All Resume endpoints working
+2. ✅ All Application endpoints working
+3. 🔄 Run database migrations in production
+4. 🔄 Deploy backend to Railway/Render
+5. 🔄 Build frontend (React + TypeScript)
+6. 🔄 Integrate frontend with backend API
+7. 🔄 Add V1.1 features (interview rounds, reminders)
+
+---
+
+## Troubleshooting
+
+### Debug Mode
+Enable detailed SQL logs:
+```python
+# In app/database.py
+engine = create_engine(
+    settings.database_url,
+    echo=True  # Add this line
+)
+```
+
+### Check Supabase Logs
+1. Go to Supabase Dashboard
+2. Navigate to **Logs** → **API Logs**
+3. Filter by endpoint
+4. Check for errors
+
+### Verify RLS Policies
+```sql
+-- In Supabase SQL Editor
+SELECT * FROM applications WHERE user_id = 'your-user-id';
+-- Should only return your applications
+```
+
+---
+
+**Happy Testing! 🚀**
 - Check `DATABASE_PASSWORD` is set
 - Ensure Supabase project is active
 - Test connection: `psql postgresql://postgres:[PASSWORD]@db.[PROJECT_REF].supabase.co:5432/postgres`

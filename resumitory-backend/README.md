@@ -132,22 +132,33 @@ API_PORT=8000
 GET  /auth/me              # Get current user (requires JWT token)
 ```
 
-### Resumes (Coming Soon)
+### Resumes
 
 ```
 GET    /resumes/           # List user's resumes
-POST   /resumes/           # Upload new resume
+POST   /resumes/           # Upload new resume (multipart/form-data)
 GET    /resumes/{id}       # Get specific resume
 PATCH  /resumes/{id}       # Update resume metadata
-DELETE /resumes/{id}       # Delete resume
-POST   /resumes/{id}/clone # Clone resume
+DELETE /resumes/{id}       # Delete resume and files
+POST   /resumes/{id}/clone # Clone resume (creates copy)
 ```
 
-### Applications (Coming Soon)
+### Applications
 
 ```
 GET    /applications/                # List applications (with filters)
 POST   /applications/                # Create application
+POST   /applications/quick           # Quick add (minimal fields)
+GET    /applications/{id}            # Get application details
+PATCH  /applications/{id}            # Update application
+DELETE /applications/{id}            # Delete application
+GET    /applications/stats/summary   # Get stats and upcoming follow-ups
+```
+
+**Query Parameters for GET /applications/:**
+- `status_filter` - Filter by status (applied, interview, offer, rejected, archived)
+- `search` - Search in company name or role (case-insensitive)
+- `resume_id` - Filter by specific resume
 GET    /applications/{id}            # Get application
 PATCH  /applications/{id}            # Update application
 DELETE /applications/{id}            # Delete application
