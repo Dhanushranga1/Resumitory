@@ -6,6 +6,8 @@ import { useAuthStore } from './lib/store';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 import Dashboard from './pages/Dashboard';
+import ResumeLibrary from './pages/ResumeLibrary';
+import ApplicationTracker from './pages/ApplicationTracker';
 
 function App() {
   const setUser = useAuthStore((state) => state.setUser);
@@ -33,6 +35,8 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/resumes" element={<ResumeLibrary />} />
+          <Route path="/applications" element={<ApplicationTracker />} />
           <Route path="/" element={<Navigate to="/dashboard" replace />} />
         </Routes>
       </Router>

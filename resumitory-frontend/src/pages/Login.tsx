@@ -29,8 +29,12 @@ export default function Login() {
         setUser(data.user);
         navigate('/dashboard');
       }
-    } catch (err: any) {
-      setError(err.message || 'Failed to login');
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError(err.message || 'Failed to login');
+      } else {
+        setError('Failed to login');
+      }
     } finally {
       setLoading(false);
     }
